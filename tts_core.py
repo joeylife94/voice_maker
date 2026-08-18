@@ -28,6 +28,36 @@ VOICE_BY_LANG = {
     "tr": VOICES["Turkish"],
 }
 
+_FILENAME_HEADERS = {
+    "filename",
+    "file name",
+    "file_name",
+    "파일명",
+    "파일 이름",
+}
+_TEXT_HEADERS = {
+    "text",
+    "content",
+    "sentence",
+    "내용",
+    "문장",
+}
+
+
+def is_tts_header_row(values: object) -> bool:
+    """Return True when the first two cells look like Voice Maker headers."""
+    try:
+        row = list(values)
+    except TypeError:
+        return False
+
+    if len(row) < 2:
+        return False
+
+    first = str(row[0] if row[0] is not None else "").strip().lower()
+    second = str(row[1] if row[1] is not None else "").strip().lower()
+    return first in _FILENAME_HEADERS and second in _TEXT_HEADERS
+
 
 def lang_code_from_voice(voice: str) -> str | None:
     voice = (voice or "").strip()

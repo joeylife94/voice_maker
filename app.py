@@ -15,6 +15,7 @@ from PIL import Image
 from tts_core import (
     VOICES,
     build_voice_segments,
+    is_tts_header_row,
     run_segmented_audio,
     safe_output_name,
 )
@@ -192,6 +193,8 @@ def render_tts_tab() -> None:
         |---|---|
         | 001 | I have to go to work. 나는 출근해야 해. |
         | 002 | Ich trinke Kaffee. 커피를 마셔요. |
+
+        `Filename | Text` 또는 `파일명 | 내용` 헤더는 자동으로 인식해 제외합니다.
         """
     )
 
@@ -206,11 +209,17 @@ def render_tts_tab() -> None:
 
     df = pd.read_excel(excel_file, header=None, engine="openpyxl")
 
-    if st.checkbox("첫 번째 행이 헤더인 경우 스킵", value=False):
-        df = df.iloc[1:]
+    header_detected = False
+    if not df.empty and is_tts_header_row(df.iloc[0].tolist()):
+        df = df.iloc[1:].reset_index(drop=True)
+        header_detected = True
 
     df = df.dropna(subset=[0, 1])
-    st.write(f"**총 {len(df)}개 항목**")
+
+    if header_detected:
+        st.caption("✅ 첫 행의 Voice Maker 헤더를 자동 인식해 제외했습니다.")
+
+    st.write(f"**총 {len(df):,}개 항목**")
     st.dataframe(df.head(10))
 
     if not st.button("🚀 음성 생성", type="primary"):

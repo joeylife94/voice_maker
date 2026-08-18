@@ -59,12 +59,14 @@ streamlit run app.py
 
 The first column is the output filename and the second column is the text to synthesize.
 
-| filename | text |
+| Filename | Text |
 |---|---|
 | 001 | I have to go to work. 나는 출근해야 해. |
 | 002 | Ich trinke Kaffee. 커피를 마셔요. |
 
-The app creates one MP3 per row and packages all output files into a ZIP archive.
+Standard headers such as `Filename | Text` and `파일명 | 내용` are detected automatically and skipped. A headerless two-column workbook is also supported.
+
+The app creates one MP3 per data row and packages all output files into a single ZIP archive.
 
 ## Tests
 
@@ -73,7 +75,7 @@ pip install -r requirements-dev.txt
 pytest
 ```
 
-The unit tests validate language/script segmentation and output filename safety without calling the online TTS service.
+The unit tests validate language/script segmentation, Excel header detection, and output filename safety without calling the online TTS service.
 
 ## Notes
 

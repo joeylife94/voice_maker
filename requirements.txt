@@ -7,3 +7,4 @@ easyocr>=1.7.2
 numpy>=1.26.0
 pillow>=10.0.0
 lingua-language-detector>=2.0.2
+pydub>=0.25.1

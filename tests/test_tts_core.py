@@ -3,6 +3,7 @@ from unittest.mock import patch
 from tts_core import (
     VOICES,
     build_voice_segments,
+    is_tts_header_row,
     safe_output_name,
     split_runs_by_script,
 )
@@ -51,3 +52,12 @@ def test_output_name_never_contains_path_separators():
     assert "/" not in name
     assert "\\" not in name
     assert name
+
+
+def test_standard_excel_header_is_detected():
+    assert is_tts_header_row(["Filename", "Text"])
+    assert is_tts_header_row(["파일명", "내용"])
+
+
+def test_real_data_row_is_not_treated_as_header():
+    assert not is_tts_header_row(["CORE_001_01", "I think this is better."])
